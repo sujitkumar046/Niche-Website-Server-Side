@@ -69,12 +69,39 @@ app.get ('/reviews', async (req,res) => {
     res.json (orderresult)
   })
 
+  //Post a review
+    app.post ('/reviews', async (req,res) => {
+    const reviewed = req.body 
+    const reviewresult = await reviewCollection.insertOne(reviewed);
+    console.log('order placed')
+    res.json (reviewresult)
+  })
+
+  //Add a new product
+    app.post ('/products', async (req,res) => {
+    const newproduct = req.body 
+    const addedproduct = await coffeemachines.insertOne(newproduct);
+    console.log('new product added to eplore page')
+    res.json (addedproduct)
+  })
+
   //Deleting a order
 
   app.delete ('/orders/:id', async (req, res) => {
     const id = req.params.id
     const query = {_id: ObjectID(id)}
     const result = await orderCollection.deleteOne(query)
+    console.log('deleting user with id', result)
+    res.json(result)
+
+    
+})
+
+//deleting a product
+  app.delete ('/products/:id', async (req, res) => {
+    const id = req.params.id
+    const query = {_id: ObjectID(id)}
+    const result = await coffeemachines.deleteOne(query)
     console.log('deleting user with id', result)
     res.json(result)
 
