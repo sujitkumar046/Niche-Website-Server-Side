@@ -27,6 +27,9 @@ async function run() {
     const coffeemachines = nicheWebsite.collection('Coffeemachines');
     const orderCollection = nicheWebsite.collection("orders");
     const reviewCollection = nicheWebsite.collection("reviews");
+    const usersCollection = nicheWebsite.collection('user')
+    
+
 
     app.get ('/products', async (req,res) => {
         const coursor = coffeemachines.find({})
@@ -45,7 +48,7 @@ async function run() {
         res.json(result)
   })
 
-  app.get ('/orders', async (req,res) => {
+   app.get ('/orders', async (req,res) => {
     const coursor = orderCollection.find({})
     const query = await coursor.toArray();
     res.send(query)
@@ -53,13 +56,33 @@ async function run() {
 
 }),
 
-app.get ('/reviews', async (req,res) => {
+  app.get ('/reviews', async (req,res) => {
   const coursor = reviewCollection.find({})
   const query = await coursor.toArray();
   res.send(query)
   console.log ('getting the data from server')
 
 }),
+
+app.get ('/users/:email', async (req, res) => {
+  const email = req.params.email;
+  const query = {email: email};
+  const user = await usersCollection.findOne(query);
+  let isAdmin = false;
+  if (user?.role === 'admin'){
+    isAdmin =true
+
+  } 
+  res.json({admin:isAdmin})
+
+} )
+// app.get ('/users', async (req,res) => {
+//   const coursor = userCollection.find({})
+//   const query = await coursor.toArray();
+//   res.send(query)
+  
+
+// }),
 
 //Post some orders
     app.post ('/orders', async (req,res) => {
@@ -68,6 +91,15 @@ app.get ('/reviews', async (req,res) => {
     console.log('order placed')
     res.json (orderresult)
   })
+
+    //Post a review
+    app.post ('/users', async (req,res) => {
+      const reviewed = req.body 
+      const reviewresult = await usersCollection.insertOne(reviewed);
+      console.log('new users added')
+      res.json (reviewresult)
+    })
+  
 
   //Post a review
     app.post ('/reviews', async (req,res) => {
@@ -84,6 +116,8 @@ app.get ('/reviews', async (req,res) => {
     console.log('new product added to eplore page')
     res.json (addedproduct)
   })
+  
+
 
   //Deleting a order
 
@@ -107,6 +141,17 @@ app.get ('/reviews', async (req,res) => {
 
     
 })
+
+//update an user
+
+app.put ('/users', async (req, res) => {
+ const user = req.body;
+  const filter = {email: user.email};
+  const updateDoc = {$set : {role: 'admin'}};
+  const result = await usersCollection. updateOne(filter, updateDoc);
+  res.json(result);
+
+ })
 
 
 
