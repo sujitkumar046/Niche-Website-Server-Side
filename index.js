@@ -152,6 +152,14 @@ app.put ('/users', async (req, res) => {
   res.json(result);
 
  })
+app.put ('/orders/:id', async (req, res) => {
+  const id = req.params.id
+  const filter = {_id: ObjectID(id)}
+  const updateDoc = {$set : {status: 'approved'}};
+  const result = await orderCollection.updateOne(filter, updateDoc);
+  res.json(result);
+
+ })
 
 
 
