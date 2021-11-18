@@ -76,6 +76,19 @@ app.get ('/users/:email', async (req, res) => {
   res.json({admin:isAdmin})
 
 } )
+
+app.get ('/orders/:id', async (req, res) => {
+  const ID = req.params.id;
+  const query = {_id: ObjectID(ID)}
+  const order = await orderCollection.findOne(query);
+  let isStatus = false;
+  if (order?.status === 'approved'){
+    isStatus =true
+
+  } 
+  res.json({status:isStatus})
+
+} )
 // app.get ('/users', async (req,res) => {
 //   const coursor = userCollection.find({})
 //   const query = await coursor.toArray();
