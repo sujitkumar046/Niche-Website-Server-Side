@@ -80,13 +80,8 @@ app.get ('/users/:email', async (req, res) => {
 app.get ('/orders/:id', async (req, res) => {
   const ID = req.params.id;
   const query = {_id: ObjectID(ID)}
-  const order = await orderCollection.findOne(query);
-  let isStatus = false;
-  if (order?.status === 'approved'){
-    isStatus =true
-
-  } 
-  res.json({status:isStatus})
+  const result = await orderCollection.findOne(query);
+  res.json(result)
 
 } )
 // app.get ('/users', async (req,res) => {
